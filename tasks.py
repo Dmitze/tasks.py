@@ -17,12 +17,10 @@ def get_days_from_today(date_str):
 # --- Завдання 2: Лотерейні числа ---
 def get_numbers_ticket(min_num, max_num, quantity):
     
-    # Перевірка
     if min_num < 1 or max_num > 1000 or quantity <= 0: return []
     if quantity > (max_num - min_num + 1): return []
 
     try:
-        # Без множини, просто sample
         nums = random.sample(range(min_num, max_num + 1), quantity)
         return sorted(nums)
     except:
@@ -32,30 +30,23 @@ def get_numbers_ticket(min_num, max_num, quantity):
 # --- Завдання 3: Чистий телефон ---
 def normalize_phone(phone_number):
     
-    # Чистимо все, що не цифра
     digits = re.sub(r'\D', '', phone_number) 
     
-    # Якщо вже починається з 380, просто додаємо плюс
     if digits.startswith('380'):
         return '+' + digits
     
-    # Якщо починається з нуля (050...)
     if digits.startswith('0') and len(digits) == 10:
         return '+38' + digits
 
-    # Якщо це 10 цифр, але без 0 на початку (наприклад, 991234567)
     if len(digits) == 10:
         return '+380' + digits
 
-    # Якщо є 38, але без 0 (наприклад, 38099...)
     if digits.startswith('38') and len(digits) == 12:
         return '+' + digits
         
-    # Якщо довге, додаємо плюс на всяк випадок (бо код міг бути без плюса)
     if len(digits) >= 9:
         return '+' + digits
         
-    # Все інше
     return digits
 
 
@@ -68,16 +59,13 @@ def get_upcoming_birthdays(users):
 
     for user in users:
         try:
-            # Парсинг і заміна року
             bday = datetime.datetime.strptime(user["birthday"], "%Y.%m.%d").date()
             bday_this_year = bday.replace(year=today.year)
 
             if bday_this_year < today:
                 bday_this_year = bday.replace(year=today.year + 1)
-            
-            # Якщо попадаємо у вікно
+
             if today <= bday_this_year < limit:
-                
                 c_date = bday_this_year
                 day_of_week = bday_this_year.weekday()
 
@@ -92,13 +80,9 @@ def get_upcoming_birthdays(users):
                 })
 
         except ValueError:
-            # Ігноруємо биті дати
             continue
 
     return birthdays
-
-
-# --- Приклади використання функцій ---
 
 if __name__ == '__main__':
     print("="*60)
@@ -128,7 +112,7 @@ if __name__ == '__main__':
 
     raw_numbers = [
         "067\t123 4567", "+380 44 123 4567", "380501234567", "     0503451234",
-        "38050-111-22-22", "+1 (202) 555 0100", "+38 050 111 22 33", "0998887766" # Типовий приклад
+        "38050-111-22-22", "+1 (202) 555 0100", "+38 050 111 22 33", "0998887766" 
     ]
 
     sanitized_numbers = [normalize_phone(num) for num in raw_numbers]
